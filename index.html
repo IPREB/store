@@ -1187,8 +1187,9 @@ function renderPoliciesEditor(){
 function updatePolicyRow(pi,ri,val){
   policies[pi].rows[ri].text=val;policies[pi].rows[ri].bold='';
 }
-function savePolicies(){
-  saveAll();renderPolicies();showToast('✅ تم حفظ السياسات');
+async function savePolicies(){
+  showToast('⏳ جاري الحفظ...');
+  await saveAll();renderPolicies();showToast('✅ تم حفظ السياسات');
 }
 
 /* ─── CATEGORIES ADMIN ─── */
@@ -1211,23 +1212,26 @@ function renderCatsAdmin(){
   });
   sel.value=cur;
 }
-function addCategory(){
+async function addCategory(){
   const name=document.getElementById('new-cat-name').value.trim();
   const icon=document.getElementById('new-cat-icon').value.trim()||'📦';
   if(!name){showToast('⚠️ أدخل اسم التصنيف');return}
   const id='cat_'+Date.now();
   cats.push({id,name,icon});
-  saveAll();
+  showToast('⏳ جاري الحفظ...');
+  await saveAll();
   document.getElementById('new-cat-name').value='';
   document.getElementById('new-cat-icon').value='';
   renderCatsAdmin();renderCatTabs();showToast('✅ تمت الإضافة');
 }
-function deleteCat(i){
+async function deleteCat(i){
   const cat=cats[i];
   const count=products.filter(p=>p&&p.cat===cat.id).length;
   if(count>0){showToast('⚠️ لا يمكن حذف تصنيف يحتوي منتجات');return}
   if(!confirm(`حذف تصنيف "${cat.name}"؟`))return;
-  cats.splice(i,1);saveAll();
+  cats.splice(i,1);
+  showToast('⏳ جاري الحفظ...');
+  await saveAll();
   renderCatsAdmin();renderCatTabs();showToast('🗑️ تم الحذف');
 }
 
@@ -1241,7 +1245,7 @@ function handleProdImg(e){
     document.getElementById('prod-upload-ph').style.display='none';
   };r.readAsDataURL(f);
 }
-function saveProduct(){
+async function saveProduct(){
   const name=document.getElementById('p-name').value.trim();
   const cat=document.getElementById('p-cat').value;
   const desc=document.getElementById('p-desc').value.trim();
@@ -1250,13 +1254,15 @@ function saveProduct(){
   if(!desc){showToast('⚠️ أدخل وصف المنتج');return}
   const ei=document.getElementById('edit-idx').value;
   const prod={id:Date.now(),name,cat,desc,price:+document.getElementById('p-price').value||0,badge:document.getElementById('p-badge').value,img:editProdImg||(ei!==''&&products[+ei]?products[+ei].img:'')||''};
-  if(ei!==''){products[+ei]=prod;showToast('✅ تم التعديل');}
+  if(ei!==''){products[+ei]=prod;}
   else{
     let s=-1;for(let i=0;i<20;i++){if(!products[i]){s=i;break}}
     if(s===-1){products.push(prod);}else{products[s]=prod;}
-    showToast('✦ تمت الإضافة!');
   }
-  saveAll();resetProdForm();renderProducts();renderCatTabs();renderAdminProds();showPage('pg-products');
+  showToast('⏳ جاري الحفظ...');
+  await saveAll();
+  if(ei!==''){showToast('✅ تم التعديل');}else{showToast('✦ تمت الإضافة!');}
+  resetProdForm();renderProducts();renderCatTabs();renderAdminProds();showPage('pg-products');
 }
 function editProduct(i){
   const p=products[i];if(!p)return;
@@ -1271,9 +1277,11 @@ function editProduct(i){
   document.getElementById('add-page-title').textContent='✏️ تعديل المنتج';
   showPage('pg-add');
 }
-function deleteProduct(i){
+async function deleteProduct(i){
   if(!confirm('حذف المنتج؟'))return;
-  products.splice(i,1);saveAll();
+  products.splice(i,1);
+  showToast('⏳ جاري الحفظ...');
+  await saveAll();
   renderProducts();renderCatTabs();renderAdminProds();showToast('🗑️ تم الحذف');
 }
 function resetProdForm(){
@@ -1313,23 +1321,25 @@ function handleLogoUpload(e){
     document.getElementById('logo-ph').style.display='none';
   };r.readAsDataURL(f);
 }
-function saveStoreIdentity(){
+async function saveStoreIdentity(){
   storeName=document.getElementById('s-name').value.trim()||'MOON TV';
   storeTag=document.getElementById('s-tag').value.trim()||'عالمك الرقمي الذكي';
   if(newLogoData){logoData=newLogoData;}
-  saveAll();initUI();showToast('✅ تم حفظ الهوية');
+  showToast('⏳ جاري الحفظ...');
+  await saveAll();initUI();showToast('✅ تم حفظ الهوية');
 }
-function saveContactInfo(){
+async function saveContactInfo(){
   WA=document.getElementById('s-wa').value.trim()||'966541982458';
   workHours=document.getElementById('s-hours').value.trim()||'4:00 م — 10:00 م';
   WA_MSG=document.getElementById('s-wa-msg').value.trim()||'السلام عليكم';
-  saveAll();
+  showToast('⏳ جاري الحفظ...');
+  await saveAll();
   document.getElementById('work-hours-display').textContent=workHours;
   updateWaLinks();renderProducts();showToast('✅ تم حفظ بيانات التواصل');
 }
 
 /* ─── PASSWORD ─── */
-function changePass(){
+async function changePass(){
   const cur=document.getElementById('pw-cur').value;
   const nw=document.getElementById('pw-new').value;
   const cf=document.getElementById('pw-cf').value;
@@ -1338,7 +1348,7 @@ function changePass(){
   if(cur!==PASS){msg.textContent='❌ كلمة المرور الحالية خاطئة';msg.className='a-msg err';return}
   if(nw.length<6){msg.textContent='⚠️ 6 أحرف على الأقل';msg.className='a-msg err';return}
   if(nw!==cf){msg.textContent='❌ كلمتا المرور غير متطابقتان';msg.className='a-msg err';return}
-  PASS=nw;saveAll();
+  PASS=nw;await saveAll();
   msg.textContent='✅ تم التغيير بنجاح';msg.className='a-msg ok';
   ['pw-cur','pw-new','pw-cf'].forEach(id=>document.getElementById(id).value='');
   showToast('🔑 تم تحديث كلمة المرور');
