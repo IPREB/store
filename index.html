@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Moon TV — عالمك الرقمي الذكي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#03050e;--bg2:#060a18;--bg3:#0a1028;--card:#0d1530;--card2:#101840;
+  --blue:#3b82f6;--blue2:#60a5fa;--cyan:#06b6d4;--purple:#8b5cf6;
+  --moon:#c8d8ff;--gold:#f0c040;--green:#10b981;--red:#ef4444;--wa:#25d366;
+  --text:#dde8ff;--muted:#5a7090;--border:rgba(59,130,246,0.15);
+  --glow:rgba(59,130,246,0.4);--cglow:rgba(6,182,212,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:2px}
+
+.cosmos{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.cosmos-grad{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 55% 45% at 15% 15%,rgba(59,130,246,0.09) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 55% at 85% 75%,rgba(139,92,246,0.08) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 35% at 50% 100%,rgba(6,182,212,0.06) 0%,transparent 50%);
+  animation:cosmosMove 12s ease-in-out infinite alternate;
+}
+@keyframes cosmosMove{from{opacity:.7}to{opacity:1}}
+.cosmos-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(59,130,246,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.025) 1px,transparent 1px);
+  background-size:55px 55px;
+}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--d,3s) ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.1}to{opacity:.8}}
+
+/* ── FLOATING RIGHT SIDEBAR ── */
+#side-float{
+  position:fixed;right:16px;top:50%;transform:translateY(-50%);
+  z-index:600;display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.side-logo{
+  width:44px;height:44px;border-radius:50%;border:2px solid var(--blue);
+  background:var(--bg3);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px var(--glow);overflow:hidden;cursor:pointer;
+  animation:logoGlow 2.5s ease-in-out infinite alternate;
+}
+@keyframes logoGlow{from{box-shadow:0 0 14px var(--glow)}to{box-shadow:0 0 28px var(--glow),0 0 50px rgba(59,130,246,0.2)}}
+.side-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none}
+.side-logo-text{font-family:'Orbitron',monospace;font-size:9px;color:var(--blue);font-weight:900;letter-spacing:1px}
+.side-divider{width:1px;height:28px;background:linear-gradient(transparent,var(--border),transparent)}
+.side-wa-wrap{position:relative;display:flex;align-items:center}
+.side-wa{
+  width:44px;height:44px;border-radius:50%;background:var(--wa);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 18px rgba(37,211,102,0.5);cursor:pointer;
+  transition:all .3s;text-decoration:none;
+  animation:waPulse 2.5s ease-in-out infinite;
+}
+@keyframes waPulse{0%,100%{box-shadow:0 0 18px rgba(37,211,102,0.5)}50%{box-shadow:0 0 32px rgba(37,211,102,0.8),0 0 55px rgba(37,211,102,0.25)}}
+.side-wa:hover{transform:scale(1.15)}
+.side-wa svg{width:24px;height:24px;fill:white}
+.side-wa-tooltip{
+  position:absolute;right:54px;
+  background:var(--wa);color:white;font-size:11px;padding:5px 12px;
+  border-radius:20px;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:opacity .2s;letter-spacing:.5px;font-weight:700;
+}
+.side-wa:hover+.side-wa-tooltip{opacity:1}
+.side-pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:onlinePulse 1.5s ease-in-out infinite}
+@keyframes onlinePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:300;padding:13px 50px;
+  background:rgba(3,5,14,0.9);backdrop-filter:blur(22px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  animation:slideDown .7s ease;
+}
+@keyframes slideDown{from{transform:translateY(-100%);opacity:0}to{opacity:1;transform:none}}
+.header-logo{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
+.hlogo-ring{
+  width:46px;height:46px;border-radius:50%;border:2px solid var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 20px var(--glow);overflow:hidden;background:var(--bg3);
+}
+.hlogo-ring img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none}
+.hlogo-icon{font-size:20px}
+.hlogo-name{font-family:'Orbitron',monospace;font-size:17px;color:var(--moon);letter-spacing:3px;font-weight:900;line-height:1.1}
+.hlogo-sub{font-size:10px;color:var(--muted);letter-spacing:2px}
+nav{display:flex;gap:24px;align-items:center}
+nav a{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:1px;transition:color .25s;position:relative;padding-bottom:3px}
+nav a::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;background:var(--cyan);transform:scaleX(0);transition:transform .25s;border-radius:2px}
+nav a:hover{color:var(--cyan)}
+nav a:hover::after{transform:scaleX(1)}
+.admin-btn{
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  padding:8px 18px;font-family:'Cairo',sans-serif;font-size:12px;letter-spacing:1px;
+  cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:6px;border-radius:4px;
+}
+.admin-btn:hover{border-color:var(--blue);color:var(--blue);box-shadow:0 0 12px var(--glow)}
+.admin-btn svg{width:14px;height:14px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;padding:130px 60px 90px;position:relative;z-index:1;}
+.hero-content{max-width:660px}
+.hero-ai-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(6,182,212,0.4);background:rgba(6,182,212,0.07);
+  padding:6px 18px;border-radius:40px;font-size:12px;color:var(--cyan);letter-spacing:2px;margin-bottom:28px;
+  animation:fadeUp .7s .1s both;
+}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:onlinePulse 1.5s infinite}
+.hero-title{font-family:'Orbitron',monospace;font-size:clamp(36px,5.5vw,70px);font-weight:900;line-height:1.1;margin-bottom:8px;animation:fadeUp .7s .2s both;}
+.hero-title .t1{color:var(--moon)}
+.hero-title .t2{background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-tagline{font-size:18px;color:var(--gold);letter-spacing:4px;margin-bottom:18px;font-weight:700;animation:fadeUp .7s .3s both;}
+.hero-desc{font-size:15px;color:var(--muted);line-height:2;max-width:500px;margin-bottom:38px;font-weight:300;animation:fadeUp .7s .4s both;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .7s .5s both}
+.btn-glow{
+  background:linear-gradient(135deg,var(--blue),var(--cyan));color:white;border:none;
+  padding:14px 34px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;
+  cursor:pointer;transition:all .3s;border-radius:4px;box-shadow:0 0 24px rgba(59,130,246,0.45);
+  display:flex;align-items:center;gap:8px;
+}
+.btn-glow:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(59,130,246,0.65)}
+.btn-ghost{
+  background:transparent;color:var(--text);border:1px solid var(--border);
+  padding:14px 34px;font-family:'Cairo',sans-serif;font-size:14px;letter-spacing:2px;
+  cursor:pointer;transition:all .3s;border-radius:4px;text-decoration:none;display:inline-flex;align-items:center;
+}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.hero-stats{display:flex;gap:38px;margin-top:48px;padding-top:28px;border-top:1px solid var(--border);animation:fadeUp .7s .7s both;}
+.hstat-num{font-family:'Orbitron',monospace;font-size:26px;color:var(--blue2);font-weight:700}
+.hstat-lbl{font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:3px}
+.hero-orbital{position:absolute;left:52%;top:50%;transform:translate(-50%,-50%);width:500px;height:500px;pointer-events:none;animation:fadeUp .7s .9s both;}
+.orb-ring{position:absolute;border-radius:50%;border:1px solid;top:50%;left:50%;transform:translate(-50%,-50%);}
+.orb-ring-1{width:280px;height:280px;border-color:rgba(59,130,246,0.15);animation:orbSpin 20s linear infinite}
+.orb-ring-2{width:400px;height:400px;border-color:rgba(6,182,212,0.1);animation:orbSpin 30s linear infinite reverse}
+.orb-ring-3{width:490px;height:490px;border-color:rgba(139,92,246,0.07);border-style:dashed;animation:orbSpin 45s linear infinite}
+@keyframes orbSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.orb-dot{position:absolute;width:8px;height:8px;border-radius:50%;top:0;left:50%;transform:translateX(-50%);margin-top:-4px;}
+.orb-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:36px;filter:drop-shadow(0 0 18px var(--blue));}
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:none}}
+
+/* ── TICKER ── */
+.ticker{background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple),var(--blue));padding:11px 0;overflow:hidden;position:relative;z-index:1;}
+.ticker-track{display:flex;white-space:nowrap;animation:tickerMove 22s linear infinite;}
+.ticker-track span{display:inline-block;padding:0 28px;font-size:11px;font-weight:700;color:white;letter-spacing:3px;text-transform:uppercase;}
+.ticker-track span::after{content:'◆';margin-right:28px;opacity:.5}
+@keyframes tickerMove{to{transform:translateX(-50%)}}
+
+section{position:relative;z-index:1}
+.sec-label{font-size:11px;letter-spacing:4px;color:var(--cyan);text-transform:uppercase;margin-bottom:12px}
+.sec-title{font-family:'Orbitron',monospace;font-size:clamp(22px,3.5vw,40px);font-weight:900;line-height:1.2}
+.sec-title span{background:linear-gradient(90deg,var(--blue2),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── PRODUCTS ── */
+.products-sec{padding:100px 60px}
+.products-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:52px;}
+.products-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;}
+@media(max-width:1200px){.products-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.products-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.products-grid{grid-template-columns:repeat(2,1fr)}}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:transform .4s,border-color .3s,box-shadow .3s;animation:fadeUp .5s ease both;}
+.pcard:hover{transform:translateY(-7px);border-color:var(--blue);box-shadow:0 0 30px rgba(59,130,246,0.2),0 10px 30px rgba(0,0,0,.4);}
+.pcard:hover .pcard-overlay{opacity:1}
+.pcard:hover .pcard-img{transform:scale(1.06)}
+.pcard-img-wrap{aspect-ratio:4/3;overflow:hidden;position:relative;background:var(--bg3)}
+.pcard-img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.pcard-overlay{position:absolute;inset:0;background:rgba(3,5,14,.75);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;}
+.pcard-wa-btn{
+  background:var(--wa);color:white;border:none;padding:10px 20px;
+  font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-radius:4px;
+  letter-spacing:1px;display:flex;align-items:center;gap:7px;transition:transform .2s;text-decoration:none;
+}
+.pcard-wa-btn:hover{transform:scale(1.05)}
+.pcard-wa-btn svg{width:15px;height:15px;fill:white}
+.pcard-badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;text-transform:uppercase;}
+.badge-new{background:var(--blue);color:white}.badge-hot{background:var(--red);color:white}
+.badge-sale{background:var(--gold);color:#000}.badge-best{background:var(--purple);color:white}
+.pcard-body{padding:14px}
+.pcard-cat{font-size:10px;letter-spacing:3px;color:var(--cyan);text-transform:uppercase;margin-bottom:5px}
+.pcard-name{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-desc{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:11px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:34px}
+.pcard-footer{display:flex;justify-content:space-between;align-items:center}
+.pcard-price{font-family:'Orbitron',monospace;font-size:15px;color:var(--gold);font-weight:700}
+.pcard-price small{font-size:10px;color:var(--muted);font-family:'Cairo',sans-serif;font-weight:400}
+.pcard.empty{border:1px dashed rgba(59,130,246,0.15);background:transparent;}
+.empty-inner{aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);}
+.empty-ring{width:44px;height:44px;border-radius:50%;border:1px dashed rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;}
+.empty-ring svg{width:20px;height:20px;stroke:rgba(59,130,246,0.35);fill:none}
+.empty-card-body{padding:14px;display:flex;flex-direction:column;gap:7px}
+.eline{height:7px;background:rgba(255,255,255,0.04);border-radius:4px}
+.eline.s60{width:60%}.eline.s40{width:40%}
+
+/* ── ABOUT ── */
+.about-sec{padding:90px 60px;background:linear-gradient(180deg,transparent,rgba(59,130,246,0.03),transparent);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-features{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.about-feat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;transition:all .3s;}
+.about-feat:hover{border-color:var(--cyan);box-shadow:0 0 18px var(--cglow)}
+.feat-icon{font-size:24px;margin-bottom:7px}
+.feat-title{font-size:12px;font-weight:700;color:var(--moon);margin-bottom:3px;letter-spacing:1px}
+.feat-desc{font-size:11px;color:var(--muted);line-height:1.7}
+.about-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:34px;text-align:center;position:relative;overflow:hidden;}
+.about-card::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.1),transparent 70%);pointer-events:none;}
+.about-moon-icon{font-size:58px;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--blue))}
+.about-tagline{font-family:'Orbitron',monospace;font-size:16px;color:var(--gold);letter-spacing:3px;margin-bottom:14px}
+.about-hours{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:8px;padding:14px;margin-top:18px;}
+.hours-label{font-size:11px;letter-spacing:2px;color:var(--green);margin-bottom:5px}
+.hours-time{font-family:'Orbitron',monospace;font-size:18px;color:white;font-weight:700}
+.hours-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* ── POLICIES ── */
+.policies-sec{padding:80px 60px}
+.policy-accordion{margin-top:38px;display:flex;flex-direction:column;gap:12px}
+.policy-item{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .3s;}
+.policy-item.open{border-color:var(--blue)}
+.policy-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;cursor:pointer;user-select:none;transition:background .2s;}
+.policy-header:hover{background:rgba(59,130,246,0.05)}
+.policy-header-left{display:flex;align-items:center;gap:12px}
+.policy-icon{font-size:20px}
+.policy-title-txt{font-size:14px;font-weight:700;letter-spacing:1px}
+.policy-arrow{width:26px;height:26px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform .3s,border-color .3s,background .3s;font-size:12px;color:var(--muted);}
+.policy-item.open .policy-arrow{transform:rotate(180deg);border-color:var(--blue);background:rgba(59,130,246,0.1);color:var(--blue)}
+.policy-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+.policy-body-inner{padding:0 22px 20px}
+.policy-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(59,130,246,0.07);}
+.policy-row:last-child{border-bottom:none}
+.policy-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:6px;box-shadow:0 0 7px var(--cglow);}
+.policy-row-txt{font-size:13px;color:var(--muted);line-height:1.8}
+.policy-row-txt strong{color:var(--text);font-weight:700}
+.policy-warn{background:rgba(240,192,64,0.07);border:1px solid rgba(240,192,64,0.22);border-radius:6px;padding:12px 14px;margin-top:10px;display:flex;gap:10px;align-items:flex-start;}
+.policy-warn-icon{font-size:16px;flex-shrink:0}
+.policy-warn-txt{font-size:12px;color:rgba(240,192,64,0.8);line-height:1.7}
+
+/* ── CTA ── */
+.cta-sec{padding:90px 60px;text-align:center;background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(139,92,246,0.06));border-top:1px solid var(--border);}
+.cta-number{font-family:'Orbitron',monospace;font-size:clamp(18px,3vw,30px);color:var(--gold);font-weight:900;letter-spacing:4px;margin-bottom:8px}
+.cta-phone-btn{
+  display:inline-flex;align-items:center;gap:12px;background:var(--wa);color:white;
+  padding:15px 40px;border-radius:6px;border:none;font-family:'Cairo',sans-serif;font-size:15px;font-weight:700;
+  letter-spacing:2px;cursor:pointer;transition:all .3s;text-decoration:none;
+  box-shadow:0 0 28px rgba(37,211,102,0.45);margin-top:18px;
+}
+.cta-phone-btn:hover{transform:translateY(-3px);box-shadow:0 0 48px rgba(37,211,102,0.65)}
+.cta-phone-btn svg{width:20px;height:20px;fill:white}
+.cta-note{font-size:12px;color:var(--muted);margin-top:16px;letter-spacing:1px}
+
+/* ── FOOTER ── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:34px 60px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;}
+.footer-logo-name{font-family:'Orbitron',monospace;font-size:16px;color:var(--moon);letter-spacing:3px}
+.footer-copy{font-size:11px;color:var(--muted);letter-spacing:1px}
+.footer-links{display:flex;gap:18px}
+.footer-links a{font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:1px;transition:color .2s}
+.footer-links a:hover{color:var(--cyan)}
+
+/* ── ADMIN LOGIN ── */
+#admin-overlay{position:fixed;inset:0;z-index:9000;background:rgba(3,5,14,0.97);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;padding:20px;}
+#admin-overlay.show{display:flex}
+.admin-login-box{background:var(--card);border:1px solid var(--border);border-radius:12px;width:100%;max-width:420px;padding:44px;text-align:center;box-shadow:0 0 60px rgba(59,130,246,0.15);animation:modalIn .3s ease;}
+@keyframes modalIn{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+.admin-moon{font-size:50px;margin-bottom:14px;filter:drop-shadow(0 0 18px var(--blue))}
+.admin-login-title{font-family:'Orbitron',monospace;font-size:19px;color:var(--moon);letter-spacing:3px;margin-bottom:5px}
+.admin-login-sub{font-size:12px;color:var(--muted);letter-spacing:2px;margin-bottom:30px}
+.admin-field{margin-bottom:16px;text-align:right}
+.admin-field label{display:block;font-size:11px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:7px}
+.admin-field input{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:12px 14px;font-family:'Cairo',sans-serif;font-size:14px;border-radius:4px;outline:none;transition:border-color .3s;}
+.admin-field input:focus{border-color:var(--blue);box-shadow:0 0 10px var(--glow)}
+.admin-login-btn{width:100%;background:linear-gradient(135deg,var(--blue),var(--cyan));color:white;border:none;padding:14px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;border-radius:4px;transition:all .3s;margin-top:6px;}
+.admin-login-btn:hover{box-shadow:0 0 22px var(--glow);transform:translateY(-1px)}
+.admin-error{font-size:12px;color:var(--red);margin-top:10px;display:none}
+.admin-close-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 22px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;border-radius:4px;margin-top:12px;transition:all .3s;width:100%;}
+.admin-close-btn:hover{border-color:var(--muted);color:var(--text)}
+
+/* ── ADMIN PANEL ── */
+#admin-panel{position:fixed;inset:0;z-index:8000;background:rgba(3,5,14,0.99);backdrop-filter:blur(12px);display:none;overflow-y:auto;}
+#admin-panel.show{display:block}
+.apanel-wrap{max-width:1100px;margin:0 auto;padding:28px 28px 60px}
+.apanel-header{display:flex;justify-content:space-between;align-items:center;padding:18px 0 22px;border-bottom:1px solid var(--border);margin-bottom:32px;}
+.apanel-title{font-family:'Orbitron',monospace;font-size:18px;color:var(--cyan);letter-spacing:3px}
+.apanel-subtitle{font-size:12px;color:var(--muted);margin-top:3px;letter-spacing:1px}
+.apanel-logout{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:var(--red);padding:8px 18px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;border-radius:4px;transition:all .3s;letter-spacing:1px;}
+.apanel-logout:hover{background:rgba(239,68,68,0.2)}
+.apanel-tabs{display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap}
+.atab{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:10px 20px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;border-radius:4px;transition:all .3s;letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+.atab.active{background:rgba(59,130,246,0.12);border-color:var(--blue);color:var(--blue2)}
+.atab-content{display:none}
+.atab-content.active{display:block}
+.aform{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:26px}
+.aform-title{font-size:15px;font-weight:700;color:var(--moon);letter-spacing:1px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.aform-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.aform-group{margin-bottom:16px}
+.aform-label{display:block;font-size:11px;letter-spacing:2px;color:var(--cyan);text-transform:uppercase;margin-bottom:6px}
+.aform-input,.aform-textarea,.aform-select{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:11px 13px;font-family:'Cairo',sans-serif;font-size:13px;border-radius:4px;outline:none;transition:border-color .3s;}
+.aform-input:focus,.aform-textarea:focus,.aform-select:focus{border-color:var(--blue);box-shadow:0 0 10px rgba(59,130,246,0.12)}
+.aform-textarea{height:78px;resize:none}
+.aform-select option{background:var(--bg3)}
+.aform-submit{background:linear-gradient(135deg,var(--blue),var(--cyan));color:white;border:none;padding:12px 32px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;border-radius:4px;transition:all .3s;}
+.aform-submit:hover{box-shadow:0 0 20px var(--glow);transform:translateY(-1px)}
+.upload-zone{border:2px dashed rgba(59,130,246,0.22);border-radius:6px;padding:22px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.upload-zone:hover{border-color:var(--blue);background:rgba(59,130,246,0.04)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-preview{width:100%;max-height:150px;object-fit:cover;border-radius:4px;display:none}
+.upload-icon-txt{font-size:26px;margin-bottom:7px}
+.upload-hint{font-size:12px;color:var(--muted)}
+.store-current-logo{width:66px;height:66px;border-radius:50%;border:2px solid var(--border);overflow:hidden;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:12px;}
+.store-current-logo img{width:100%;height:100%;object-fit:cover;display:none;border-radius:50%}
+.admin-products-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:20px}
+.admin-pcard{background:var(--bg3);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:border-color .3s;}
+.admin-pcard:hover{border-color:var(--blue)}
+.admin-pcard-img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--card)}
+.admin-pcard-body{padding:9px}
+.admin-pcard-name{font-size:11px;font-weight:700;color:var(--moon);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
+.admin-pcard-actions{display:flex;gap:5px}
+.apc-edit{flex:1;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);color:var(--blue2);font-family:'Cairo',sans-serif;font-size:10px;padding:5px;border-radius:3px;cursor:pointer;transition:all .2s;letter-spacing:1px;}
+.apc-edit:hover{background:rgba(59,130,246,0.2)}
+.apc-del{flex:1;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);color:var(--red);font-family:'Cairo',sans-serif;font-size:10px;padding:5px;border-radius:3px;cursor:pointer;transition:all .2s;letter-spacing:1px;}
+.apc-del:hover{background:rgba(239,68,68,0.18)}
+
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:linear-gradient(135deg,var(--blue),var(--cyan));color:white;padding:11px 28px;border-radius:30px;font-size:13px;font-weight:700;letter-spacing:1px;z-index:9999;transition:transform .35s ease;pointer-events:none;box-shadow:0 8px 28px rgba(59,130,246,0.4);}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:768px){
+  header{padding:12px 18px}
+  nav{display:none}
+  .hero{padding:100px 20px 80px}
+  .hero-orbital{display:none}
+  .hero-stats{gap:22px}
+  .products-sec,.about-sec,.policies-sec,.cta-sec{padding:58px 20px}
+  .about-inner{grid-template-columns:1fr}
+  footer{padding:26px 20px;flex-direction:column;gap:12px;text-align:center}
+  #side-float{right:8px}
+  .admin-products-grid{grid-template-columns:repeat(3,1fr)}
+  .aform-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="cosmos">
+  <div class="cosmos-grad"></div>
+  <div class="cosmos-grid"></div>
+</div>
+
+<!-- ── FLOATING RIGHT SIDEBAR ── -->
+<div id="side-float">
+  <div class="side-logo" id="side-logo-wrap" title="Moon TV" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <img id="side-logo-img" src="" alt=""/>
+    <span class="side-logo-text" id="side-logo-txt">MTV</span>
+  </div>
+  <div class="side-divider"></div>
+  <div class="side-wa-wrap">
+    <a class="side-wa" href="https://wa.me/966541982458?text=السلام عليكم، أريد الاستفسار عن منتجاتكم" target="_blank" title="تواصل معنا">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+    <div class="side-wa-tooltip">تواصل معنا</div>
+  </div>
+  <div class="side-divider"></div>
+  <div class="side-pulse" title="متاح الآن"></div>
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <a class="header-logo" href="#">
+    <div class="hlogo-ring">
+      <img id="header-logo-img" src="" alt=""/>
+      <span class="hlogo-icon" id="header-logo-icon">🌙</span>
+    </div>
+    <div>
+      <div class="hlogo-name" id="store-name-h">MOON TV</div>
+      <div class="hlogo-sub" id="store-tagline-h">عالمك الرقمي الذكي</div>
+    </div>
+  </a>
+  <nav>
+    <a href="#products">المنتجات</a>
+    <a href="#about">من نحن</a>
+    <a href="#policies">السياسات</a>
+    <a href="https://wa.me/966541982458" target="_blank">تواصل معنا</a>
+  </nav>
+  <button class="admin-btn" onclick="openAdminLogin()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    لوحة التحكم
+  </button>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-ai-badge">
+      <span class="ai-dot"></span>
+      مدعوم بالذكاء الاصطناعي · AI Powered
+    </div>
+    <h1 class="hero-title">
+      <div class="t1">MOON TV</div>
+      <div class="t2">متجرك الرقمي</div>
+    </h1>
+    <div class="hero-tagline">✦ عالمك الرقمي الذكي ✦</div>
+    <p class="hero-desc">
+      وجهتك الأولى للاشتراكات الرقمية الفاخرة — ذكاء اصطناعي، تصميم، ترفيه، وتقنية.
+      تسليم فوري، دعم متكامل، وضمان حقيقي يحمي مالك.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-glow" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <span>🛒</span> تسوّق الآن
+      </button>
+      <a class="btn-ghost" href="https://wa.me/966541982458?text=السلام عليكم، أريد الاستفسار عن منتجاتكم" target="_blank">📲 اطلب عبر واتساب</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hstat-num">+500</div><div class="hstat-lbl">عميل موثوق</div></div>
+      <div><div class="hstat-num">فوري</div><div class="hstat-lbl">التسليم</div></div>
+      <div><div class="hstat-num">48H</div><div class="hstat-lbl">ضمان الدعم</div></div>
+      <div><div class="hstat-num">⭐ 5.0</div><div class="hstat-lbl">تقييم العملاء</div></div>
+    </div>
+  </div>
+  <div class="hero-orbital">
+    <div class="orb-ring orb-ring-1"><div class="orb-dot" style="background:var(--blue);box-shadow:0 0 10px var(--blue)"></div></div>
+    <div class="orb-ring orb-ring-2"><div class="orb-dot" style="background:var(--cyan);box-shadow:0 0 10px var(--cyan)"></div></div>
+    <div class="orb-ring orb-ring-3"><div class="orb-dot" style="background:var(--purple);box-shadow:0 0 10px var(--purple)"></div></div>
+    <div class="orb-center">🌙</div>
+  </div>
+</section>
+
+<!-- ── TICKER ── -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>تسليم فوري</span><span>ضمان حقيقي</span><span>دعم واتساب</span>
+    <span>اشتراكات AI</span><span>IPTV Premium</span><span>Canva Pro</span>
+    <span>YouTube Premium</span><span>متاجر إلكترونية</span><span>تصميم شعارات</span>
+    <span>تسليم فوري</span><span>ضمان حقيقي</span><span>دعم واتساب</span>
+    <span>اشتراكات AI</span><span>IPTV Premium</span><span>Canva Pro</span>
+    <span>YouTube Premium</span><span>متاجر إلكترونية</span><span>تصميم شعارات</span>
+  </div>
+</div>
+
+<!-- ── PRODUCTS ── -->
+<section class="products-sec" id="products">
+  <div class="products-header">
+    <div>
+      <div class="sec-label">— كتالوج الخدمات</div>
+      <h2 class="sec-title">خدماتنا <span>الرقمية</span></h2>
+    </div>
+    <div style="text-align:left">
+      <div style="color:var(--green);font-size:12px;margin-bottom:4px">🟢 متاح الآن</div>
+      <div style="color:var(--muted);font-size:11px;letter-spacing:1px">البيع والشراء عبر واتساب</div>
+    </div>
+  </div>
+  <div class="products-grid" id="products-grid"></div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="about-sec" id="about">
+  <div class="about-inner">
+    <div>
+      <div class="sec-label">— من نحن</div>
+      <h2 class="sec-title">متجر <span>Moon TV</span></h2>
+      <p style="margin-top:16px;font-size:14px;color:var(--muted);line-height:2;font-weight:300">
+        <strong style="color:var(--moon)">Moon TV (مون تيفي)</strong> هو وجهة رقمية متكاملة مخصصة لتوفير
+        الحلول والاشتراكات الرقمية الذكية بأسعار تنافسية. نجمع بين خدمات البث،
+        الذكاء الاصطناعي، والإنتاجية في مكان واحد — مع دعم فني حقيقي يرافقك خطوة بخطوة.
+      </p>
+      <div class="about-features">
+        <div class="about-feat"><div class="feat-icon">🤖</div><div class="feat-title">ذكاء اصطناعي</div><div class="feat-desc">اشتراكات Gemini وأدوات AI المتطورة</div></div>
+        <div class="about-feat"><div class="feat-icon">📺</div><div class="feat-title">IPTV فاخر</div><div class="feat-desc">أفلام، مسلسلات، ومباريات بجودة عالية</div></div>
+        <div class="about-feat"><div class="feat-icon">🎨</div><div class="feat-title">تصميم احترافي</div><div class="feat-desc">Canva Pro وتصميم شعارات ومتاجر</div></div>
+        <div class="about-feat"><div class="feat-icon">⚡</div><div class="feat-title">تسليم فوري</div><div class="feat-desc">يوتيوب بريميوم وخدمات تقنية</div></div>
+      </div>
+    </div>
+    <div class="about-card">
+      <div class="about-moon-icon">🌙</div>
+      <div class="about-tagline">عالمك الرقمي الذكي</div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.9">نؤمن أن كل عميل يستحق تجربة رقمية متكاملة — من الاختيار حتى التفعيل والدعم المستمر.</p>
+      <div class="about-hours">
+        <div class="hours-label">🕒 أوقات العمل</div>
+        <div class="hours-time">4:00 م — 10:00 م</div>
+        <div class="hours-sub">نستقبل طلباتكم يومياً خلال هذه الأوقات</div>
+      </div>
+      <div style="margin-top:16px">
+        <a href="https://wa.me/966541982458?text=السلام عليكم" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--wa);color:white;text-decoration:none;padding:10px 24px;border-radius:5px;font-size:13px;font-weight:700;letter-spacing:1px;box-shadow:0 0 18px rgba(37,211,102,0.35);transition:all .3s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          0541982458
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── POLICIES ── -->
+<section class="policies-sec" id="policies">
+  <div style="text-align:center;margin-bottom:8px">
+    <div class="sec-label" style="text-align:center">— شفافية كاملة</div>
+    <h2 class="sec-title" style="text-align:center">سياساتنا <span>وضماناتنا</span></h2>
+    <p style="margin-top:10px;font-size:13px;color:var(--muted);max-width:480px;margin-inline:auto;line-height:1.8">نؤمن أن العميل يستحق وضوحاً تاماً — هنا ستجد كل شيء بلا مواربة.</p>
+  </div>
+  <div class="policy-accordion">
+    <div class="policy-item" id="pol1">
+      <div class="policy-header" onclick="togglePolicy('pol1')">
+        <div class="policy-header-left"><span class="policy-icon">🛡️</span><span class="policy-title-txt">سياسة الضمان والتشغيل</span></div>
+        <div class="policy-arrow">▼</div>
+      </div>
+      <div class="policy-body"><div class="policy-body-inner">
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>ضمان التفعيل:</strong> نلتزم بعمل الكود أو الحساب من اللحظة الأولى لاستلامه — بدون استثناء.</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>مدة الاشتراك:</strong> الضمان يسري طوال فترة الاشتراك ضد أي توقف مفاجئ ناتج عن المصدر أو السيرفر.</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>الدعم الفني:</strong> فريقنا معك عبر الواتساب لحل أي مشكلة خلال 24 ساعة (ضمن أوقات العمل).</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>الاستخدام العادل:</strong> لا يشمل الضمان الحظر الناتج عن تشغيل الاشتراك على أجهزة أكثر من المسموح بها (جهاز واحد فقط ما لم يُذكر غير ذلك).</div></div>
+        <div class="policy-warn"><span class="policy-warn-icon">⚠️</span><div class="policy-warn-txt">تأكد من استخدام الاشتراك على الجهاز المخصص فقط لتجنب الحظر وفقدان الضمان.</div></div>
+      </div></div>
+    </div>
+    <div class="policy-item" id="pol2">
+      <div class="policy-header" onclick="togglePolicy('pol2')">
+        <div class="policy-header-left"><span class="policy-icon">🔄</span><span class="policy-title-txt">سياسة الاستبدال والاسترجاع</span></div>
+        <div class="policy-arrow">▼</div>
+      </div>
+      <div class="policy-body"><div class="policy-body-inner">
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>قبل التسليم:</strong> يحق لك استرجاع المبلغ كاملاً إذا لم يتم إرسال الكود أو البيانات إليك.</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>مدة التفعيل:</strong> الحد الأقصى هو <strong>48 ساعة</strong> من وقت الطلب.</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>بعد التفعيل:</strong> لا يمكن الاسترجاع بعد الاستلام إلا في حال وجود خلل فني من المصدر تعذر علينا إصلاحه خلال 48 ساعة.</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt"><strong>مسؤولية العميل:</strong> المتجر غير مسؤول عن ضعف أداء الخدمة الناتج عن جودة إنترنت العميل.</div></div>
+        <div class="policy-warn"><span class="policy-warn-icon">💡</span><div class="policy-warn-txt">ننصح دائماً بالتأكد من جودة اتصالك بالإنترنت قبل الشراء لضمان أفضل تجربة.</div></div>
+      </div></div>
+    </div>
+    <div class="policy-item" id="pol3">
+      <div class="policy-header" onclick="togglePolicy('pol3')">
+        <div class="policy-header-left"><span class="policy-icon">🕒</span><span class="policy-title-txt">أوقات العمل والدعم</span></div>
+        <div class="policy-arrow">▼</div>
+      </div>
+      <div class="policy-body"><div class="policy-body-inner">
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt">نستقبل طلباتكم ونخدمكم من <strong>4:00 عصراً حتى 10:00 مساءً</strong> يومياً.</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt">يتم تنفيذ الطلبات والرد على الاستفسارات خلال هذه الأوقات لضمان أفضل خدمة.</div></div>
+        <div class="policy-row"><div class="policy-dot"></div><div class="policy-row-txt">الطلبات خارج أوقات العمل تُنفَّذ في بداية الدوام التالي.</div></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-sec">
+  <div class="sec-label" style="text-align:center">— اطلب الآن</div>
+  <h2 class="sec-title" style="text-align:center;margin-bottom:12px">جاهز تبدأ؟ <span>تواصل معنا</span></h2>
+  <p style="font-size:14px;color:var(--muted);max-width:440px;margin:0 auto;line-height:1.9">البيع والشراء يتم بالكامل عبر واتساب — بسرعة وأمان ودعم فوري.</p>
+  <div class="cta-number">📱 0541982458</div>
+  <a class="cta-phone-btn" href="https://wa.me/966541982458?text=السلام عليكم، أريد الاستفسار عن منتجاتكم" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    ابدأ المحادثة على واتساب
+  </a>
+  <div class="cta-note">⏰ نستجيب خلال أوقات العمل: 4 عصراً — 10 مساءً</div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div>
+    <div class="footer-logo-name" id="footer-store-name">MOON TV</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:1px">عالمك الرقمي الذكي</div>
+  </div>
+  <div class="footer-copy">© 2025 Moon TV — جميع الحقوق محفوظة</div>
+  <div class="footer-links">
+    <a href="#policies">السياسات</a>
+    <a href="#about">من نحن</a>
+    <a href="https://wa.me/966541982458" target="_blank">واتساب</a>
+  </div>
+</footer>
+
+<!-- ── ADMIN LOGIN ── -->
+<div id="admin-overlay">
+  <div class="admin-login-box">
+    <div class="admin-moon">🌙</div>
+    <div class="admin-login-title">لوحة التحكم</div>
+    <div class="admin-login-sub">Moon TV · Admin Portal</div>
+    <div class="admin-field">
+      <label>اسم المستخدم</label>
+      <input type="text" id="login-user" placeholder="moonadmin" autocomplete="off"/>
+    </div>
+    <div class="admin-field">
+      <label>كلمة المرور</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="admin-login-btn" onclick="doLogin()">🔓 تسجيل الدخول</button>
+    <div class="admin-error" id="login-error">❌ اسم المستخدم أو كلمة المرور غير صحيحة</div>
+    <button class="admin-close-btn" onclick="closeAdminLogin()">إلغاء / رجوع</button>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div id="admin-panel">
+  <div class="apanel-wrap">
+    <div class="apanel-header">
+      <div>
+        <div class="apanel-title">🌙 لوحة تحكم Moon TV</div>
+        <div class="apanel-subtitle">Admin Panel · إدارة المتجر الرقمي</div>
+      </div>
+      <button class="apanel-logout" onclick="doLogout()">🚪 تسجيل الخروج</button>
+    </div>
+    <div class="apanel-tabs">
+      <button class="atab active" onclick="switchTab('tab-products')" id="btn-tab-products">🛍️ المنتجات</button>
+      <button class="atab" onclick="switchTab('tab-add')" id="btn-tab-add">➕ إضافة / تعديل</button>
+      <button class="atab" onclick="switchTab('tab-store')" id="btn-tab-store">🎨 تخصيص المتجر</button>
+      <button class="atab" onclick="switchTab('tab-password')" id="btn-tab-password">🔑 كلمة المرور</button>
+    </div>
+
+    <!-- Products List -->
+    <div class="atab-content active" id="tab-products">
+      <div class="aform">
+        <div class="aform-title">المنتجات الحالية <span style="color:var(--muted);font-size:12px;font-weight:400" id="prod-count-lbl"></span></div>
+        <div class="admin-products-grid" id="admin-prod-grid"></div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Product -->
+    <div class="atab-content" id="tab-add">
+      <div class="aform">
+        <div class="aform-title" id="add-form-title">➕ إضافة منتج جديد</div>
+        <input type="hidden" id="edit-prod-idx" value=""/>
+        <div class="aform-group">
+          <label class="aform-label">صورة المنتج</label>
+          <div class="upload-zone">
+            <input type="file" accept="image/*" onchange="handleProdImg(event)" id="prod-img-file"/>
+            <img class="upload-preview" id="prod-img-preview" src="" alt=""/>
+            <div id="prod-upload-ph"><div class="upload-icon-txt">🖼️</div><div class="upload-hint">اضغط لرفع صورة المنتج (PNG, JPG)</div></div>
+          </div>
+        </div>
+        <div class="aform-row">
+          <div class="aform-group">
+            <label class="aform-label">اسم المنتج *</label>
+            <input class="aform-input" id="p-name" type="text" placeholder="مثال: Gemini Pro"/>
+          </div>
+          <div class="aform-group">
+            <label class="aform-label">الفئة</label>
+            <select class="aform-select" id="p-cat">
+              <option>ذكاء اصطناعي</option><option>IPTV</option><option>تصميم</option>
+              <option>يوتيوب</option><option>متاجر</option><option>شعارات</option><option>أخرى</option>
+            </select>
+          </div>
+        </div>
+        <div class="aform-group">
+          <label class="aform-label">وصف المنتج</label>
+          <textarea class="aform-textarea" id="p-desc" placeholder="اكتب وصفاً مقنعاً..."></textarea>
+        </div>
+        <div class="aform-row">
+          <div class="aform-group">
+            <label class="aform-label">السعر (ر.س)</label>
+            <input class="aform-input" id="p-price" type="number" placeholder="0"/>
+          </div>
+          <div class="aform-group">
+            <label class="aform-label">الوسم (Badge)</label>
+            <select class="aform-select" id="p-badge">
+              <option value="">— بدون —</option>
+              <option value="new">جديد</option><option value="hot">الأكثر طلباً</option>
+              <option value="sale">عرض</option><option value="best">مميز</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="aform-submit" onclick="saveProduct()">✦ حفظ المنتج</button>
+          <button onclick="resetProductForm()" style="background:transparent;border:1px solid var(--border);color:var(--muted);padding:12px 22px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;border-radius:4px;letter-spacing:1px;transition:all .3s" onmouseover="this.style.borderColor='var(--muted)'" onmouseout="this.style.borderColor='var(--border)'">إعادة تعيين</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Customization -->
+    <div class="atab-content" id="tab-store">
+      <div class="aform">
+        <div class="aform-title">🎨 تخصيص هوية المتجر</div>
+        <div class="aform-group">
+          <label class="aform-label">لوغو المتجر</label>
+          <div class="upload-zone">
+            <input type="file" accept="image/*" onchange="handleLogoUpload(event)" id="logo-file"/>
+            <div style="display:flex;align-items:center;gap:16px;pointer-events:none">
+              <div class="store-current-logo">
+                <img id="logo-upload-preview" src="" alt=""/>
+                <span id="logo-upload-ph-icon">🌙</span>
+              </div>
+              <div>
+                <div style="font-size:13px;margin-bottom:4px">ارفع صورة اللوغو</div>
+                <div class="upload-hint">يظهر في الهيدر والشريط الجانبي</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="aform-row">
+          <div class="aform-group">
+            <label class="aform-label">اسم المتجر</label>
+            <input class="aform-input" id="s-name" type="text" value="MOON TV"/>
+          </div>
+          <div class="aform-group">
+            <label class="aform-label">الشعار (Tagline)</label>
+            <input class="aform-input" id="s-tag" type="text" value="عالمك الرقمي الذكي"/>
+          </div>
+        </div>
+        <button class="aform-submit" onclick="saveStoreInfo()">💾 تطبيق التغييرات</button>
+      </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="atab-content" id="tab-password">
+      <div class="aform" style="max-width:420px">
+        <div class="aform-title">🔑 تغيير كلمة المرور</div>
+        <div class="aform-group"><label class="aform-label">كلمة المرور الحالية</label><input class="aform-input" type="password" id="pw-current" placeholder="••••••••"/></div>
+        <div class="aform-group"><label class="aform-label">كلمة المرور الجديدة</label><input class="aform-input" type="password" id="pw-new" placeholder="••••••••"/></div>
+        <div class="aform-group"><label class="aform-label">تأكيد كلمة المرور</label><input class="aform-input" type="password" id="pw-confirm" placeholder="••••••••"/></div>
+        <button class="aform-submit" onclick="changePassword()">🔒 تحديث</button>
+        <div id="pw-msg" style="margin-top:10px;font-size:12px;display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">تم!</div>
+
+<script>
+const WA_NUM='966541982458';
+const MAX=10;
+let adminPass='Moon@2025';
+let newProdImg=null,logoImg=null;
+
+let products=[
+  {id:1,name:'Gemini AI Pro',cat:'ذكاء اصطناعي',desc:'اشتراك Gemini المتقدم بكامل مزاياه لإنجاز مهامك بذكاء فائق',price:49,badge:'hot',img:'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=400&q=80'},
+  {id:2,name:'IPTV Premium',cat:'IPTV',desc:'أفلام + مسلسلات + مباريات بجودة 4K — شهر كامل بلا انقطاع',price:29,badge:'best',img:'https://images.unsplash.com/photo-1593359677879-a4bb92f829e1?w=400&q=80'},
+  {id:3,name:'Canva Pro',cat:'تصميم',desc:'اشتراك Canva Pro كامل المميزات للتصميم الاحترافي',price:39,badge:'new',img:'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&q=80'},
+  {id:4,name:'YouTube Premium',cat:'يوتيوب',desc:'يوتيوب بريميوم بدون إعلانات مع تشغيل خلفي كامل',price:19,badge:'sale',img:'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=400&q=80'},
+  {id:5,name:'متجر إلكتروني',cat:'متاجر',desc:'إنشاء متجرك الإلكتروني الاحترافي جاهز للبيع الفوري',price:199,badge:'best',img:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=80'},
+];
+
+// Stars
+(function(){
+  const c=document.querySelector('.cosmos');
+  for(let i=0;i<55;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+0.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+    c.appendChild(s);
+  }
+})();
+
+function renderGrid(){
+  const g=document.getElementById('products-grid');g.innerHTML='';
+  for(let i=0;i<MAX;i++){
+    const p=products[i];const d=document.createElement('div');
+    d.style.animationDelay=(i*45)+'ms';
+    if(p){
+      const bl={new:'badge-new',hot:'badge-hot',sale:'badge-sale',best:'badge-best'}[p.badge]||'';
+      const bt={new:'جديد',hot:'الأكثر طلباً',sale:'عرض',best:'مميز'}[p.badge]||'';
+      const wm=encodeURIComponent(`السلام عليكم، أريد الاستفسار عن: ${p.name} بسعر ${p.price} ر.س`);
+      d.className='pcard';
+      d.innerHTML=`<div class="pcard-img-wrap">
+        ${p.img?`<img class="pcard-img" src="${p.img}" alt="${p.name}" loading="lazy"/>`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:38px;background:var(--bg3)">📦</div>`}
+        <div class="pcard-overlay"><a class="pcard-wa-btn" href="https://wa.me/${WA_NUM}?text=${wm}" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          اطلب عبر واتساب</a></div>
+        ${p.badge?`<div class="pcard-badge ${bl}">${bt}</div>`:''}
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-cat">${p.cat}</div>
+        <div class="pcard-name">${p.name}</div>
+        <div class="pcard-desc">${p.desc||'—'}</div>
+        <div class="pcard-footer"><div class="pcard-price">${p.price?Number(p.price).toLocaleString():'—'}<small> ر.س</small></div></div>
+      </div>`;
+    } else {
+      d.className='pcard empty';
+      d.innerHTML=`<div class="empty-inner"><div class="empty-ring"><svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div style="font-size:11px;color:var(--muted)">قريباً</div></div><div class="empty-card-body"><div class="eline"></div><div class="eline s60"></div><div class="eline s40"></div></div>`;
+    }
+    g.appendChild(d);
+  }
+}
+
+function renderAdminGrid(){
+  const g=document.getElementById('admin-prod-grid');g.innerHTML='';
+  const n=products.filter(Boolean).length;
+  document.getElementById('prod-count-lbl').textContent=`(${n}/${MAX})`;
+  for(let i=0;i<MAX;i++){
+    const p=products[i];const d=document.createElement('div');
+    if(p){
+      d.className='admin-pcard';
+      d.innerHTML=`${p.img?`<img class="admin-pcard-img" src="${p.img}" alt="${p.name}"/>`:`<div class="admin-pcard-img" style="display:flex;align-items:center;justify-content:center;font-size:26px">📦</div>`}
+      <div class="admin-pcard-body"><div class="admin-pcard-name">${p.name}</div>
+      <div class="admin-pcard-actions"><button class="apc-edit" onclick="editProduct(${i})">تعديل</button><button class="apc-del" onclick="deleteProduct(${i})">حذف</button></div></div>`;
+    } else {
+      d.className='admin-pcard';d.style.cssText='border-style:dashed;opacity:.35';
+      d.innerHTML=`<div class="admin-pcard-img" style="display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--muted)">+</div><div class="admin-pcard-body"><div class="admin-pcard-name" style="color:var(--muted)">فارغ ${i+1}</div></div>`;
+    }
+    g.appendChild(d);
+  }
+}
+
+function handleProdImg(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    newProdImg=ev.target.result;
+    const pr=document.getElementById('prod-img-preview');
+    pr.src=newProdImg;pr.style.display='block';
+    document.getElementById('prod-upload-ph').style.display='none';
+  };r.readAsDataURL(f);
+}
+
+function saveProduct(){
+  const name=document.getElementById('p-name').value.trim();
+  if(!name){showToast('⚠️ أدخل اسم المنتج');return}
+  const ei=document.getElementById('edit-prod-idx').value;
+  const prod={id:Date.now(),name,cat:document.getElementById('p-cat').value,desc:document.getElementById('p-desc').value.trim(),price:document.getElementById('p-price').value,badge:document.getElementById('p-badge').value,img:newProdImg||(ei!==''&&products[+ei]?products[+ei].img:'')||''};
+  if(ei!==''){products[+ei]=prod;showToast('✅ تم تعديل المنتج');}
+  else{
+    let s=-1;for(let i=0;i<MAX;i++){if(!products[i]){s=i;break}}
+    if(s===-1){showToast('⚠️ المتجر ممتلئ (10 منتجات)');return}
+    products[s]=prod;showToast('✦ تمت الإضافة بنجاح');
+  }
+  resetProductForm();renderGrid();renderAdminGrid();switchTab('tab-products');
+}
+
+function editProduct(i){
+  const p=products[i];if(!p)return;
+  document.getElementById('edit-prod-idx').value=i;
+  document.getElementById('p-name').value=p.name;
+  document.getElementById('p-cat').value=p.cat;
+  document.getElementById('p-desc').value=p.desc;
+  document.getElementById('p-price').value=p.price;
+  document.getElementById('p-badge').value=p.badge;
+  if(p.img){document.getElementById('prod-img-preview').src=p.img;document.getElementById('prod-img-preview').style.display='block';document.getElementById('prod-upload-ph').style.display='none';}
+  newProdImg=null;
+  document.getElementById('add-form-title').textContent='✏️ تعديل المنتج';
+  switchTab('tab-add');
+}
+
+function deleteProduct(i){
+  if(!confirm('هل تريد حذف هذا المنتج؟'))return;
+  products[i]=undefined;renderGrid();renderAdminGrid();showToast('🗑️ تم الحذف');
+}
+
+function resetProductForm(){
+  document.getElementById('edit-prod-idx').value='';
+  ['p-name','p-desc','p-price'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('p-cat').selectedIndex=0;document.getElementById('p-badge').selectedIndex=0;
+  document.getElementById('prod-img-preview').style.display='none';
+  document.getElementById('prod-upload-ph').style.display='block';
+  document.getElementById('prod-img-file').value='';
+  document.getElementById('add-form-title').textContent='➕ إضافة منتج جديد';
+  newProdImg=null;
+}
+
+function handleLogoUpload(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    logoImg=ev.target.result;
+    document.getElementById('logo-upload-preview').src=logoImg;
+    document.getElementById('logo-upload-preview').style.display='block';
+    document.getElementById('logo-upload-ph-icon').style.display='none';
+  };r.readAsDataURL(f);
+}
+
+function saveStoreInfo(){
+  const name=document.getElementById('s-name').value.trim()||'MOON TV';
+  const tag=document.getElementById('s-tag').value.trim()||'عالمك الرقمي الذكي';
+  document.getElementById('store-name-h').textContent=name;
+  document.getElementById('store-tagline-h').textContent=tag;
+  document.getElementById('footer-store-name').textContent=name;
+  document.getElementById('side-logo-txt').textContent=name.substring(0,3).toUpperCase();
+  if(logoImg){
+    ['header-logo-img','side-logo-img'].forEach(id=>{const el=document.getElementById(id);el.src=logoImg;el.style.display='block';});
+    document.getElementById('header-logo-icon').style.display='none';
+    document.getElementById('side-logo-txt').style.display='none';
+  }
+  showToast('✅ تم تطبيق تخصيصات المتجر');
+}
+
+function togglePolicy(id){
+  const item=document.getElementById(id);const body=item.querySelector('.policy-body');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.policy-item').forEach(el=>{el.classList.remove('open');el.querySelector('.policy-body').style.maxHeight='0';});
+  if(!isOpen){item.classList.add('open');body.style.maxHeight=body.scrollHeight+'px';}
+}
+
+function openAdminLogin(){document.getElementById('admin-overlay').classList.add('show')}
+function closeAdminLogin(){document.getElementById('admin-overlay').classList.remove('show');document.getElementById('login-error').style.display='none';document.getElementById('login-user').value='';document.getElementById('login-pass').value='';}
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value;
+  if(u==='moonadmin'&&p===adminPass){
+    closeAdminLogin();document.getElementById('admin-panel').classList.add('show');
+    renderAdminGrid();switchTab('tab-products');showToast('🌙 مرحباً بك في لوحة التحكم');
+  } else {document.getElementById('login-error').style.display='block';document.getElementById('login-pass').value='';}
+}
+function doLogout(){document.getElementById('admin-panel').classList.remove('show');showToast('👋 تم تسجيل الخروج');}
+function changePassword(){
+  const cur=document.getElementById('pw-current').value;
+  const nw=document.getElementById('pw-new').value;
+  const cf=document.getElementById('pw-confirm').value;
+  const msg=document.getElementById('pw-msg');
+  if(cur!==adminPass){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='❌ كلمة المرور الحالية غير صحيحة';return;}
+  if(nw.length<6){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='⚠️ 6 أحرف على الأقل';return;}
+  if(nw!==cf){msg.style.display='block';msg.style.color='var(--red)';msg.textContent='❌ كلمتا المرور غير متطابقتان';return;}
+  adminPass=nw;msg.style.display='block';msg.style.color='var(--green)';msg.textContent='✅ تم التغيير بنجاح';
+  ['pw-current','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');
+  showToast('🔑 تم تحديث كلمة المرور');
+}
+function switchTab(id){
+  document.querySelectorAll('.atab-content').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.atab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('btn-'+id).classList.add('active');
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+renderGrid();
+</script>
+</body>
+</html>
