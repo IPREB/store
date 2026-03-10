@@ -564,10 +564,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:26px 18p
     <a href="#policies">السياسات</a>
     <a id="h-wa-link" href="https://wa.me/966541982458" target="_blank">تواصل</a>
   </nav>
-  <button class="h-admin-btn" onclick="openAdminLogin()">
-    <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-    تحكم
-  </button>
   <button class="h-menu-btn" id="mob-menu-btn" onclick="toggleMobNav()">
     <span></span><span></span><span></span>
   </button>
@@ -579,7 +575,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:26px 18p
   <a href="#about" onclick="closeMobNav()">🌙 من نحن</a>
   <a href="#policies" onclick="closeMobNav()">🛡️ السياسات</a>
   <a id="mob-wa-link" href="https://wa.me/966541982458" target="_blank" onclick="closeMobNav()">📲 تواصل معنا</a>
-  <button class="mn-adm" onclick="closeMobNav();openAdminLogin()">🔒 لوحة التحكم</button>
+
 </div>
 
 <!-- HERO -->
@@ -728,6 +724,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:26px 18p
       <a href="#policies">السياسات</a>
       <a href="#about">من نحن</a>
       <a id="f-wa-link" href="https://wa.me/966541982458" target="_blank">واتساب</a>
+      <a href="#" id="secret-admin-link" onclick="event.preventDefault();openAdminLogin()" style="color:transparent;user-select:none;font-size:11px;cursor:default;letter-spacing:.5px">©</a>
     </div>
   </div>
 </footer>
@@ -1306,6 +1303,9 @@ function changePass(){
   ['pw-cur','pw-new','pw-cf'].forEach(id=>document.getElementById(id).value='');
   showToast('🔑 تم تحديث كلمة المرور');
 }
+
+/* ─── SECRET ENTRY ─── */
+// الدخول عبر رابط مخفي في الفوتر — غير مرئي للزوار
 
 /* ─── ADMIN AUTH ─── */
 function openAdminLogin(){document.getElementById('admin-login-overlay').classList.add('show')}
