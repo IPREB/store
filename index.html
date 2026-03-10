@@ -719,12 +719,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:26px 18p
       <div class="f-name" id="f-store-name">MOON TV</div>
       <div style="font-size:10px;color:var(--muted);margin-top:2px">عالمك الرقمي الذكي</div>
     </div>
-    <div class="f-copy">© 2025 Moon TV · جميع الحقوق محفوظة</div>
+    <div class="f-copy" id="copyright-tap" style="cursor:default;user-select:none">© 2025 Moon TV · جميع الحقوق محفوظة</div>
     <div class="f-links">
       <a href="#policies">السياسات</a>
       <a href="#about">من نحن</a>
       <a id="f-wa-link" href="https://wa.me/966541982458" target="_blank">واتساب</a>
-      <a href="#" id="secret-admin-link" onclick="event.preventDefault();openAdminLogin()" style="color:transparent;user-select:none;font-size:11px;cursor:default;letter-spacing:.5px">©</a>
     </div>
   </div>
 </footer>
@@ -1305,7 +1304,16 @@ function changePass(){
 }
 
 /* ─── SECRET ENTRY ─── */
-// الدخول عبر رابط مخفي في الفوتر — غير مرئي للزوار
+// الدخول: اضغط على "© 2025 Moon TV" في الفوتر 5 مرات متتالية
+(()=>{
+  let taps=0, timer=null;
+  document.getElementById('copyright-tap').addEventListener('click',()=>{
+    taps++;
+    clearTimeout(timer);
+    timer=setTimeout(()=>{ taps=0; },2000);
+    if(taps>=5){ taps=0; openAdminLogin(); }
+  });
+})();
 
 /* ─── ADMIN AUTH ─── */
 function openAdminLogin(){document.getElementById('admin-login-overlay').classList.add('show')}
