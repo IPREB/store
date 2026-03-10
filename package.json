@@ -1,8 +1,0 @@
-{
-  "name": "moontv-store",
-  "version": "1.0.0",
-  "description": "Moon TV Store with Netlify DB",
-  "dependencies": {
-    "@neondatabase/serverless": "^0.9.0"
-  }
-}
